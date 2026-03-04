@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="description" content="Scan book barcodes to look up ISBNs and metadata" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <title>Book Scanner</title>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Header -->
+      <header class="header">
+        <h1>Book Scanner</h1>
+      </header>
+
+      <!-- Scanner View -->
+      <section id="scanner-section" class="scanner-section">
+        <div class="viewfinder">
+          <video id="video" autoplay playsinline muted></video>
+          <canvas id="canvas" hidden></canvas>
+          <div class="target-overlay">
+            <div class="target-box"></div>
+          </div>
+          <div id="scanner-status" class="scanner-status"></div>
+        </div>
+        <button id="scan-btn" class="btn btn-primary">Start Scanning</button>
+      </section>
+
+      <!-- Result View -->
+      <section id="result-section" class="result-section hidden">
+        <div class="result-card">
+          <div class="result-header">
+            <img id="result-cover" class="result-cover" alt="" />
+            <div class="result-info">
+              <h2 id="result-title" class="result-title"></h2>
+              <p id="result-author" class="result-author"></p>
+            </div>
+          </div>
+          <div class="result-details">
+            <div class="detail-row">
+              <span class="detail-label">ISBN-13</span>
+              <span id="result-isbn13" class="detail-value mono"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">ISBN-10</span>
+              <span id="result-isbn10" class="detail-value mono"></span>
+            </div>
+            <div id="result-pages-row" class="detail-row">
+              <span class="detail-label">Pages</span>
+              <span id="result-pages" class="detail-value"></span>
+            </div>
+            <div id="result-published-row" class="detail-row">
+              <span class="detail-label">Published</span>
+              <span id="result-published" class="detail-value"></span>
+            </div>
+          </div>
+          <div id="result-loading" class="result-loading hidden">
+            Looking up book details...
+          </div>
+          <div id="result-not-found" class="result-not-found hidden">
+            Book not found in Open Library
+          </div>
+          <div class="result-actions">
+            <button id="copy-btn" class="btn btn-secondary">Copy ISBN</button>
+            <a id="openlib-link" class="btn btn-secondary" target="_blank" rel="noopener">Open Library</a>
+            <button id="scan-again-btn" class="btn btn-primary">Scan Another</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- History View -->
+      <section id="history-section" class="history-section">
+        <div class="history-header">
+          <h2>Recent Scans</h2>
+          <button id="clear-history-btn" class="btn btn-small btn-danger hidden">Clear</button>
+        </div>
+        <div id="history-list" class="history-list">
+          <p class="empty-state">No scans yet. Tap "Start Scanning" to begin.</p>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
