@@ -134,6 +134,18 @@ async function onBarcodeDetected(rawValue: string) {
     resultNotFound.textContent = "Offline — metadata unavailable";
   }
 
+  // Log scan to backend
+  fetch("/api/log-scan", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      isbn13: record.isbn13,
+      isbn10: record.isbn10,
+      title: record.metadata?.title,
+      authors: record.metadata?.authors,
+    }),
+  }).catch(() => {})
+
   // Save to history
   await addScan(record);
   await renderHistory();

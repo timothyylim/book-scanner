@@ -39,6 +39,14 @@ export default defineConfig({
             },
           },
           {
+            urlPattern: /^https:\/\/www\.googleapis\.com\/books\/.*/i,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "google-books-api",
+              expiration: { maxEntries: 200, maxAgeSeconds: 86400 * 7 },
+            },
+          },
+          {
             urlPattern: /^https:\/\/covers\.openlibrary\.org\/.*/i,
             handler: "CacheFirst",
             options: {
