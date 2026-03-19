@@ -33,6 +33,14 @@ const openlibLink = document.getElementById("openlib-link") as HTMLAnchorElement
 
 const scanner = new BarcodeScanner(video);
 
+function logScan(data: Record<string, unknown>) {
+  fetch("/api/log-scan", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  }).catch(() => {})
+}
+
 // State
 let currentISBN13 = "";
 
@@ -127,24 +135,29 @@ async function onBarcodeDetected(rawValue: string) {
       }
     } else {
       resultNotFound.classList.remove("hidden");
+      logScan({ event: "book_not_found", isbn13: rawValue, isbn10 });
     }
-  } catch {
+  } catch (err) {
     resultLoading.classList.add("hidden");
     resultNotFound.classList.remove("hidden");
     resultNotFound.textContent = "Offline — metadata unavailable";
+    logScan({
+      event: "book_lookup_error",
+      isbn13: rawValue,
+      isbn10,
+      error: err instanceof Error ? err.message : "Unknown error",
+    });
   }
 
-  // Log scan to backend
-  fetch("/api/log-scan", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+  if (record.metadata) {
+    logScan({
+      event: "book_scan",
       isbn13: record.isbn13,
       isbn10: record.isbn10,
-      title: record.metadata?.title,
-      authors: record.metadata?.authors,
-    }),
-  }).catch(() => {})
+      title: record.metadata.title,
+      authors: record.metadata.authors,
+    });
+  }
 
   // Save to history
   await addScan(record);

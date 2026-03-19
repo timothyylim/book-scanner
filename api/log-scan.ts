@@ -5,15 +5,16 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: "Method not allowed" })
   }
 
-  const { isbn13, isbn10, title, authors } = req.body ?? {}
+  const { event, isbn13, isbn10, title, authors, error } = req.body ?? {}
 
   console.log(
     JSON.stringify({
-      event: "book_scan",
+      event: event ?? "book_scan",
       isbn13,
       isbn10,
       title: title ?? null,
       authors: authors ?? null,
+      error: error ?? null,
       timestamp: new Date().toISOString(),
     })
   )
